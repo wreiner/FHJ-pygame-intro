@@ -46,7 +46,13 @@ class PlayerShip(pygame.sprite.Sprite):
         self.screen = screen
         self.screen.blit(self.image, (WINDOW_WIDTH - 65, WINDOW_HEIGHT - 65))
 
-
+    def set_x(self, x_coord):
+        # keep the player character within the bounds of the screen
+        if x_coord < 0:
+            x_coord = 0
+        elif x_coord + self.image.get_width() > WINDOW_WIDTH:
+            x_coord = WINDOW_WIDTH - self.image.get_width()
+        self.screen.blit(self.image, (x_coord, WINDOW_HEIGHT - 65))
 
 
     def moveRight(self, pixels):

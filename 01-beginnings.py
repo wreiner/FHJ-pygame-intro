@@ -25,6 +25,9 @@ def main():
     player = PlayerShip(PLAYER_SHIP, SCREEN)
     sprites = pygame.sprite.Group(player)
 
+    player_speed = 0
+    player_x = 0
+
     while True:
         # DEBUG SCREENS
         # font_screen("SCORE LIVES 1234567890")
@@ -49,13 +52,20 @@ def main():
 
             if event.type == pygame.KEYDOWN:
                 if event.key in (pygame.K_LEFT, pygame.K_a):
-                    player.moveLeft(5)
+                    player_speed = -1
 
                 if event.key in (pygame.K_RIGHT, pygame.K_d):
-                    player.moveRight(5)
+                    player_speed = 1
 
-        sprites.update(SCREEN)
-        sprites.draw(SCREEN)
+            if event.type == pygame.KEYUP:
+                if event.key in (pygame.K_LEFT, pygame.K_a, pygame.K_RIGHT, pygame.K_d):
+                    player_speed = 0
+
+        player_x += player_speed
+
+        player.set_x(player_x)
+        # sprites.update(SCREEN)
+        # sprites.draw(SCREEN)
         pygame.display.update()
 
 if __name__=="__main__":
