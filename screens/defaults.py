@@ -1,5 +1,5 @@
-WINDOW_HEIGHT = 800
-WINDOW_WIDTH = 600
+WINDOW_HEIGHT = 600
+WINDOW_WIDTH = 800
 WINDOW_TITLE = "01-beginnings"
 
 COLOR_WHITE = (255,255,255)
@@ -8,3 +8,7 @@ COLOR_GREEN = (0,255,0)
 COLOR_BLUE = (0,0,255)
 
 PLAYER_SHIP = "res/icons/space-shuttle.png"
+ENEMY_10PTS = "res/icons/fremdes-schiff.png"
+
+ENEMY_X_STEPS = 0.08
+ENEMY_Y_STEPS = 15
