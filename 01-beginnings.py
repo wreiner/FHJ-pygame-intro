@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 
 import pygame
+import random
 
 from objects.bunker import Bunker
 from objects.player_ship import PlayerShip
 from objects.enemy_10pts import Enemy10Pts
+
 
 from screens.defaults import *
 from screens.dynamic_screens import game_screen
@@ -22,6 +24,8 @@ def main():
     SCREEN = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
     pygame.display.set_caption(WINDOW_TITLE)
     CLOCK = pygame.time.Clock()
+    background_img = pygame.image.load(BACKGROUNG_IMG)
+    background_img = pygame.transform.scale(background_img, (WINDOW_WIDTH, WINDOW_HEIGHT))
 
     player = PlayerShip(PLAYER_SHIP, SCREEN)
     # sprites = pygame.sprite.Group(player)
@@ -31,7 +35,7 @@ def main():
 
     for i in range(0, 11):
         enemy10pts = Enemy10Pts(ENEMY_10PTS, SCREEN)
-        enemy10pts.set_x(10 + 50*i)
+        enemy10pts.set_x(10 + 55 * i)
 
         enemies.append(enemy10pts)
 
@@ -44,12 +48,15 @@ def main():
 
     update_y = False
 
+    timer = random.uniform(2, 6)
+
     while True:
         # DEBUG SCREENS
         # font_screen("SCORE LIVES 1234567890")
         # show_fonts()
 
-        game_screen(230, 3, SCREEN)
+        SCREEN.fill((0, 0, 0))
+        SCREEN.blit(background_img, (0, 0))
 
         if splash_shown == False:
                 print("in splash check")
@@ -73,25 +80,44 @@ def main():
                 if event.key in (pygame.K_RIGHT, pygame.K_d):
                     player_speed = 1
 
+                if event.key == pygame.K_SPACE:
+                    player.laser_obj.update_coords(player.x_coord + player.width/2 - 1, player.y_coord - 50)
+                    player.laser_obj.draw_laser = True
+
             if event.type == pygame.KEYUP:
                 if event.key in (pygame.K_LEFT, pygame.K_a, pygame.K_RIGHT, pygame.K_d):
                     player_speed = 0
 
         player_x += player_speed
+        player.set_x(player_x)
 
         for enemy in enemies:
             if enemy.update_x(enemy_speed * enemy_speed_inv) or update_y:
                 enemy_speed_inv *= -1
                 update_y = True
+            if enemy.laser_obj.draw_laser:
+                enemy.laser_obj.update_y_coord(LASER_Y_STEPS)
 
         if update_y:
             for enemy in enemies:
                 enemy.update_y(ENEMY_Y_STEPS)
 
-            if enemy == enemies[-1]:
-                update_y = False
+                if enemy == enemies[-1]:
+                    update_y = False
 
-        player.set_x(player_x)
+        if player.laser_obj.draw_laser:
+            player.laser_obj.update_y_coord(LASER_Y_STEPS)
+
+        # redraw screen
+        game_screen(230, 3, SCREEN)
+        for enemy in enemies:
+            enemy.draw()
+            if enemy.laser_obj.draw_laser:
+                enemy.laser_obj.draw()
+        player.draw()
+        if player.laser_obj.draw_laser:
+            player.laser_obj.draw()
+
         pygame.display.update()
 
 

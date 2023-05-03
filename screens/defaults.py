@@ -9,6 +9,10 @@ COLOR_BLUE = (0,0,255)
 
 PLAYER_SHIP = "res/icons/space-shuttle.png"
 ENEMY_10PTS = "res/icons/fremdes-schiff.png"
+BACKGROUNG_IMG = "res/imgs/ishan-seefromthesky-6U-sSfBV-gM-unsplash.jpg"
 
 ENEMY_X_STEPS = 0.08
-ENEMY_Y_STEPS = 15
+# ENEMY_X_STEPS = 1
+ENEMY_Y_STEPS = 10
+
+LASER_Y_STEPS = 5
