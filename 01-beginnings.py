@@ -49,11 +49,15 @@ def main():
     update_y = False
 
     timer = random.uniform(2, 6)
+    dt = 0
 
     while True:
         # DEBUG SCREENS
         # font_screen("SCORE LIVES 1234567890")
         # show_fonts()
+
+        # Decrease the timer by the delta time.
+        timer -= dt
 
         SCREEN.fill((0, 0, 0))
         SCREEN.blit(background_img, (0, 0))
@@ -75,14 +79,15 @@ def main():
 
             if event.type == pygame.KEYDOWN:
                 if event.key in (pygame.K_LEFT, pygame.K_a):
-                    player_speed = -1
+                    player_speed = PLAYER_X_STEPS * -1
 
                 if event.key in (pygame.K_RIGHT, pygame.K_d):
-                    player_speed = 1
+                    player_speed = PLAYER_X_STEPS
 
                 if event.key == pygame.K_SPACE:
-                    player.laser_obj.update_coords(player.x_coord + player.width/2 - 1, player.y_coord - 50)
-                    player.laser_obj.draw_laser = True
+                    if not player.laser_obj.draw_laser:
+                        player.laser_obj.update_coords(player.x_coord + player.width/2 - 1, player.y_coord - 50)
+                        player.laser_obj.draw_laser = True
 
             if event.type == pygame.KEYUP:
                 if event.key in (pygame.K_LEFT, pygame.K_a, pygame.K_RIGHT, pygame.K_d):
@@ -90,6 +95,14 @@ def main():
 
         player_x += player_speed
         player.set_x(player_x)
+
+        if timer <= 0:
+            # Pick a random enemy to get the x and y coords.
+            random_enemy = random.choice(enemies)
+            # enemy_x, enemy_y = random_enemy.rect.center
+            # bullet = BulletEnemy(enemy_x, enemy_y)
+            random_enemy.fire()
+            timer = random.uniform(2, 6)  # Reset the timer.
 
         for enemy in enemies:
             if enemy.update_x(enemy_speed * enemy_speed_inv) or update_y:
@@ -108,6 +121,12 @@ def main():
         if player.laser_obj.draw_laser:
             player.laser_obj.update_y_coord(LASER_Y_STEPS)
 
+        # collission detection
+        for enemy in enemies:
+            if player.laser_obj.check_collision(enemy.x_coord, enemy.y_coord + enemy.height, enemy.x_coord + enemy.width):
+                enemy.set_hit()
+                player.laser_obj.reset_laser()
+
         # redraw screen
         game_screen(230, 3, SCREEN)
         for enemy in enemies:
@@ -119,6 +138,8 @@ def main():
             player.laser_obj.draw()
 
         pygame.display.update()
+
+        dt = CLOCK.tick(60) / 1000  # / 1000 to convert it to seconds.
 
 
 if __name__=="__main__":

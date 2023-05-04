@@ -18,6 +18,8 @@ class Enemy10Pts(pygame.sprite.Sprite):
         self.height = self.rect.height
         self.y_coord = 65
 
+        self.hit = False
+
         self.laser_obj = Laser(self.screen, COLOR_RED, "enemy")
 
     def set_x(self, x_coord):
@@ -45,11 +47,18 @@ class Enemy10Pts(pygame.sprite.Sprite):
 
         self.x_coord = x_coord
 
-        if self.laser_obj.draw_laser == False and ((random.randint(0, 100) * random.randint(0, 1000)) % 73) == 0:
-            self.laser_obj.update_coords(self.x_coord + self.width/2 - 1, self.y_coord + self.height + 5)
-            self.laser_obj.draw_laser = True
+        # if self.laser_obj.draw_laser == False and ((random.randint(0, 100) * random.randint(0, 1000)) % 73) == 0:
+        #     self.laser_obj.update_coords(self.x_coord + self.width/2 - 1, self.y_coord + self.height + 5)
+        #     self.laser_obj.draw_laser = True
 
         return y2update
+
+    def fire(self):
+        self.laser_obj.update_coords(self.x_coord + self.width/2 - 1, self.y_coord + self.height + 5)
+        self.laser_obj.draw_laser = True
+
+    def set_hit(self):
+        self.hit = True
 
     def update_y(self, y_upd):
         y_coord = self.y_coord
@@ -58,4 +67,5 @@ class Enemy10Pts(pygame.sprite.Sprite):
         self.y_coord = y_coord
 
     def draw(self):
-        self.screen.blit(self.image, (self.x_coord, self.y_coord))
+        if not self.hit:
+            self.screen.blit(self.image, (self.x_coord, self.y_coord))
