@@ -17,7 +17,7 @@ def main():
     global SCREEN, CLOCK
 
     # FIXME set to false after testin
-    splash_shown = True
+    splash_shown = False
 
     pygame.init()
 
@@ -57,10 +57,6 @@ def main():
     running = True
 
     while running:
-        # DEBUG SCREENS
-        # font_screen("SCORE LIVES 1234567890")
-        # show_fonts()
-
         # Decrease the timer by the delta time.
         timer -= dt
 
@@ -69,16 +65,13 @@ def main():
 
         if splash_shown == False:
                 print("in splash check")
-                welcome_screen("welcome_screen")
+                welcome_screen(SCREEN, "SPACE INVADERS")
                 pygame.display.update()
                 pygame.time.wait(3000)
                 splash_shown = True
-                SCREEN.fill(COLOR_WHITE)
-                other_screen("main screen?")
+                continue
 
         for event in pygame.event.get():
-
-            # print(f"got event: {event} ..")
             if event.type == pygame.QUIT:
                 running = False
 
