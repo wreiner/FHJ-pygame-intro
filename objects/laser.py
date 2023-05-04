@@ -39,9 +39,6 @@ class Laser:
                 self.draw_laser = False
 
     def check_collision(self, target_left_x_coord, target_left_y_coord, target_right_x_coord):
-        # print(f"LASER({self.x_coord}/{self.y_coord})")
-        # print(f"ENEMY({target_left_x_coord} - {target_right_x_coord}/{target_left_y_coord})")
-
         if self.x_coord >= target_left_x_coord and self.x_coord + self.width <= target_right_x_coord and self.y_coord <= target_left_y_coord:
             return True
         return False
