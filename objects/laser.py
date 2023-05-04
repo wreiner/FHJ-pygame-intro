@@ -27,11 +27,11 @@ class Laser:
     def update_coords(self, parent_x_coord, parent_y_coord):
         self.x_coord = parent_x_coord
         self.y_coord = parent_y_coord
-        self.laser = pygame.rect.Rect((parent_x_coord, parent_y_coord, 2, 5))
+        self.laser = pygame.rect.Rect((parent_x_coord, parent_y_coord, LASER_WIDTH, LASER_HEIGHT))
 
     def update_y_coord(self, y_coord):
         self.y_coord += y_coord * self.laser_direction
-        self.laser = pygame.rect.Rect((self.x_coord, self.y_coord, 2, 5))
+        self.laser = pygame.rect.Rect((self.x_coord, self.y_coord, LASER_WIDTH, LASER_HEIGHT))
 
         if self.laser_direction > 0 and self.y_coord > WINDOW_HEIGHT:
                 self.draw_laser = False
