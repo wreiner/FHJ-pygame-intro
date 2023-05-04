@@ -11,7 +11,8 @@ PLAYER_SHIP = "res/icons/space-shuttle.png"
 ENEMY_10PTS = "res/icons/fremdes-schiff.png"
 BACKGROUNG_IMG = "res/imgs/ishan-seefromthesky-6U-sSfBV-gM-unsplash.jpg"
 
-ENEMY_X_STEPS = 0.08
+ENEMY_X_STEPS = 1
+PLAYER_X_STEPS = 5
 # ENEMY_X_STEPS = 1
 ENEMY_Y_STEPS = 10
 
