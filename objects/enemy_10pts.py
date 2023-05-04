@@ -19,6 +19,7 @@ class Enemy10Pts(pygame.sprite.Sprite):
         self.y_coord = 65
 
         self.hit = False
+        self.score_points = 10
 
         self.laser_obj = Laser(self.screen, COLOR_RED, "enemy")
 

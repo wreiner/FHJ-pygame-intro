@@ -44,6 +44,7 @@ def main():
 
         # sprites = pygame.sprite.Group(player)
 
+    enemies_nothit = len(enemies)
     player_speed = 0
     player_x = 0
     enemy_speed = ENEMY_X_STEPS
@@ -128,9 +129,12 @@ def main():
 
         # collission detection
         for enemy in enemies:
-            if player.laser_obj.check_collision(enemy.x_coord, enemy.y_coord + enemy.height, enemy.x_coord + enemy.width):
+            if not enemy.hit and player.laser_obj.check_collision(enemy.x_coord, enemy.y_coord + enemy.height, enemy.x_coord + enemy.width):
                 enemy.set_hit()
+                score += enemy.score_points
+                enemies_nothit -= 1
                 player.laser_obj.reset_laser()
+                print(f"enemy has ben hit {enemies_nothit}")
 
             if enemy.laser_obj.check_collision(player.x_coord, player.y_coord, player.x_coord + player.width):
                 # player hit
@@ -142,8 +146,12 @@ def main():
             print("GAME OVER")
             running = False
 
+        if enemies_nothit == 0:
+            print("YOU WON")
+            running = False
+
         # redraw screen
-        game_screen(230, 3, SCREEN)
+        game_screen(score, lives, SCREEN)
         for enemy in enemies:
             enemy.draw()
             if enemy.laser_obj.draw_laser:
