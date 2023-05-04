@@ -33,6 +33,9 @@ def main():
     enemies = []
     # enemies.clear()
 
+    score = 0
+    lives = 3
+
     for i in range(0, 11):
         enemy10pts = Enemy10Pts(ENEMY_10PTS, SCREEN)
         enemy10pts.set_x(10 + 55 * i)
@@ -50,8 +53,9 @@ def main():
 
     timer = random.uniform(2, 6)
     dt = 0
+    running = True
 
-    while True:
+    while running:
         # DEBUG SCREENS
         # font_screen("SCORE LIVES 1234567890")
         # show_fonts()
@@ -75,7 +79,7 @@ def main():
 
             # print(f"got event: {event} ..")
             if event.type == pygame.QUIT:
-                pygame.quit()
+                running = False
 
             if event.type == pygame.KEYDOWN:
                 if event.key in (pygame.K_LEFT, pygame.K_a):
@@ -99,10 +103,11 @@ def main():
         if timer <= 0:
             # Pick a random enemy to get the x and y coords.
             random_enemy = random.choice(enemies)
-            # enemy_x, enemy_y = random_enemy.rect.center
-            # bullet = BulletEnemy(enemy_x, enemy_y)
-            random_enemy.fire()
-            timer = random.uniform(2, 6)  # Reset the timer.
+            if not random_enemy.hit:
+                # enemy_x, enemy_y = random_enemy.rect.center
+                # bullet = BulletEnemy(enemy_x, enemy_y)
+                random_enemy.fire()
+                timer = random.uniform(2, 6)  # Reset the timer.
 
         for enemy in enemies:
             if enemy.update_x(enemy_speed * enemy_speed_inv) or update_y:
@@ -127,6 +132,16 @@ def main():
                 enemy.set_hit()
                 player.laser_obj.reset_laser()
 
+            if enemy.laser_obj.check_collision(player.x_coord, player.y_coord, player.x_coord + player.width):
+                # player hit
+                print(f"player has been hit {lives}")
+                enemy.laser_obj.reset_laser()
+                lives -= 1
+
+        if lives == 0:
+            print("GAME OVER")
+            running = False
+
         # redraw screen
         game_screen(230, 3, SCREEN)
         for enemy in enemies:
@@ -139,8 +154,9 @@ def main():
 
         pygame.display.update()
 
-        dt = CLOCK.tick(60) / 1000  # / 1000 to convert it to seconds.
+        dt = CLOCK.tick(60) / 400  # / 1000 to convert it to seconds.
 
+    pygame.quit()
 
 if __name__=="__main__":
     main()
