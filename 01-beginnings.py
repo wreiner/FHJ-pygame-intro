@@ -14,55 +14,61 @@ from screens.static_screens import other_screen, welcome_screen
 
 
 def main():
-    global SCREEN, CLOCK
+    # initialize pygame
+    pygame.init()
+    running = True
 
     # FIXME set to false after testin
-    splash_shown = False
+    splash_shown = True
 
-    pygame.init()
-
+    # -- setup the window
     SCREEN = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
-    pygame.display.set_caption(WINDOW_TITLE)
-    CLOCK = pygame.time.Clock()
     background_img = pygame.image.load(BACKGROUNG_IMG)
     background_img = pygame.transform.scale(background_img, (WINDOW_WIDTH, WINDOW_HEIGHT))
+    pygame.display.set_caption(WINDOW_TITLE)
 
+    # -- setup the clock
+    CLOCK = pygame.time.Clock()
+
+    # -- setup the player
     player = PlayerShip(PLAYER_SHIP, SCREEN)
-    # sprites = pygame.sprite.Group(player)
-
-    enemies = []
-    # enemies.clear()
+    player_speed = 0
+    player_x = 0
 
     score = 0
     lives = 3
 
+    # -- setup enemies
+    enemies = []
+    enemy_speed = ENEMY_X_STEPS
+    enemy_speed_inv = 1
+
+    # used to propagate y movement of enemies
+    update_y = False
+
+    # randomize enemy shooting
+    timer = random.uniform(2, 6)
+    dt = 0
+
+    # a row has 11 enemies
     for i in range(0, 11):
         enemy10pts = Enemy10Pts(ENEMY_10PTS, SCREEN)
         enemy10pts.set_x(10 + 55 * i)
 
         enemies.append(enemy10pts)
 
-        # sprites = pygame.sprite.Group(player)
-
     enemies_nothit = len(enemies)
-    player_speed = 0
-    player_x = 0
-    enemy_speed = ENEMY_X_STEPS
-    enemy_speed_inv = 1
 
-    update_y = False
-
-    timer = random.uniform(2, 6)
-    dt = 0
-    running = True
-
+    # MAIN GAME LOOP
     while running:
-        # Decrease the timer by the delta time.
-        timer -= dt
-
+        # build the base of the screen as it should be at the back
         SCREEN.fill((0, 0, 0))
         SCREEN.blit(background_img, (0, 0))
 
+        # Decrease the timer by the delta time.
+        timer -= dt
+
+        # show splash screen
         if splash_shown == False:
                 print("in splash check")
                 welcome_screen(SCREEN, "SPACE INVADERS")
@@ -71,6 +77,7 @@ def main():
                 splash_shown = True
                 continue
 
+        # handle user inputs
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -94,6 +101,7 @@ def main():
         player_x += player_speed
         player.set_x(player_x)
 
+        # it is random time to try to shoot the player
         if timer <= 0:
             # Pick a random enemy to get the x and y coords.
             random_enemy = random.choice(enemies)
@@ -110,6 +118,7 @@ def main():
             if enemy.laser_obj.draw_laser:
                 enemy.laser_obj.update_y_coord(LASER_Y_STEPS)
 
+        # propagate y movement of all enemies
         if update_y:
             for enemy in enemies:
                 enemy.update_y(ENEMY_Y_STEPS)
@@ -117,11 +126,13 @@ def main():
                 if enemy == enemies[-1]:
                     update_y = False
 
+        # draw the player laser
         if player.laser_obj.draw_laser:
             player.laser_obj.update_y_coord(LASER_Y_STEPS)
 
         # collission detection
         for enemy in enemies:
+            # check if player hit any enemy
             if not enemy.hit and player.laser_obj.check_collision(enemy.x_coord, enemy.y_coord + enemy.height, enemy.x_coord + enemy.width):
                 enemy.set_hit()
                 score += enemy.score_points
@@ -129,12 +140,14 @@ def main():
                 player.laser_obj.reset_laser()
                 print(f"enemy has ben hit {enemies_nothit}")
 
+            # check if an enemy hit the player
             if enemy.laser_obj.check_collision(player.x_coord, player.y_coord, player.x_coord + player.width):
                 # player hit
                 print(f"player has been hit {lives}")
                 enemy.laser_obj.reset_laser()
                 lives -= 1
 
+        # other game states
         if lives == 0:
             print("GAME OVER")
             running = False
