@@ -4,6 +4,9 @@ WINDOW_WIDTH = 800
 WINDOW_TITLE = "01-beginnings"
 BACKGROUNG_IMG = "res/imgs/ishan-seefromthesky-6U-sSfBV-gM-unsplash.jpg"
 
+FONT_PATH = "res/fonts/ComputerPixel7-mnL2.ttf"
+FONT_SIZE = 30
+
 # -- COLORS
 COLOR_BLACK = (0, 0, 0)
 COLOR_WHITE = (255,255,255)

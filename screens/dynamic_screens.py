@@ -4,9 +4,7 @@ from objects.bunker import Bunker
 
 
 def game_screen(score, lives, screen):
-    font_name = "fonts/ComputerPixel7-mnL2.ttf"
-    size = 30
-    font = pygame.font.Font(font_name, size)
+    font = pygame.font.Font(FONT_PATH, FONT_SIZE)
     txtsurf = font.render(f"SCORE: {score}", True, COLOR_BLACK)
     screen.blit(txtsurf,(10, 10))
 
